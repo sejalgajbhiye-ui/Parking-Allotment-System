@@ -473,6 +473,13 @@ public class ParkingSystem {
 
     public static void main(String[] args) {
 
+        // The desktop interface is the default entry point. Pass "--console"
+        // to retain the original menu-driven version.
+        if (args.length == 0 || !"--console".equalsIgnoreCase(args[0])) {
+            ParkingSystemUI.launch();
+            return;
+        }
+
         int choice;
 
         do {

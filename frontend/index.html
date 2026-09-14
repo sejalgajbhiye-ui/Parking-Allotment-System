@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ParkEase | Parking Management</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">P</span>
+      <div><strong>ParkEase</strong><small>Parking management</small></div>
+    </div>
+    <nav aria-label="Main navigation">
+      <button class="nav-link active" data-page="dashboard">Dashboard</button>
+      <button class="nav-link" data-page="park">Park a vehicle</button>
+      <button class="nav-link" data-page="vehicles">Active vehicles</button>
+      <button class="nav-link" data-page="history">Parking history</button>
+    </nav>
+    <p class="rate-note">Rates<br><strong>2W: Rs. 1/min &nbsp; | &nbsp; 4W: Rs. 2/min</strong></p>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div><h1 id="page-title">Dashboard</h1><p id="page-subtitle">A quick view of your parking facility.</p></div>
+      <span class="system-status"><i></i> System online</span>
+    </header>
+
+    <section id="dashboard" class="page active">
+      <div class="stats">
+        <article class="stat-card blue"><p>ACTIVE VEHICLES</p><strong id="active-count">0</strong></article>
+        <article class="stat-card cyan"><p>2W SLOTS AVAILABLE</p><strong id="two-wheeler-slots">100</strong></article>
+        <article class="stat-card purple"><p>4W SLOTS AVAILABLE</p><strong id="four-wheeler-slots">100</strong></article>
+        <article class="stat-card green"><p>TOTAL REVENUE</p><strong id="revenue">Rs. 0.00</strong></article>
+      </div>
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Currently parked</h2><p>Live vehicle and slot information</p></div><button class="button secondary" data-navigate="vehicles">View all</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Vehicle no.</th><th>Owner</th><th>Type</th><th>Slot</th><th>Entry time</th><th>Duration</th></tr></thead><tbody id="dashboard-table"></tbody></table></div>
+      </section>
+    </section>
+
+    <section id="park" class="page">
+      <section class="form-panel panel">
+        <div class="panel-heading"><div><h2>Allocate a parking slot</h2><p>Fill in the details to register a new vehicle.</p></div></div>
+        <form id="parking-form">
+          <label>Vehicle number<input id="vehicle-number" required placeholder="e.g. MH12AB1234" autocomplete="off" /></label>
+          <label>Owner name<input id="owner-name" required placeholder="e.g. Priya Sharma" /></label>
+          <label>Vehicle type<select id="vehicle-type"><option value="2W">2W — Two wheeler</option><option value="4W">4W — Four wheeler</option></select></label>
+          <button class="button" type="submit">Allocate parking slot</button>
+        </form>
+      </section>
+    </section>
+
+    <section id="vehicles" class="page">
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Active vehicles</h2><p>Check out a vehicle once it leaves the facility.</p></div><input id="vehicle-search" class="search" placeholder="Search vehicle number" /></div>
+        <div class="table-wrap"><table><thead><tr><th>Vehicle no.</th><th>Owner</th><th>Type</th><th>Slot</th><th>Entry time</th><th>Duration</th><th></th></tr></thead><tbody id="active-table"></tbody></table></div>
+      </section>
+    </section>
+
+    <section id="history" class="page">
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Parking history</h2><p>Completed parking visits and collected fees.</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Vehicle no.</th><th>Owner</th><th>Type</th><th>Slot</th><th>Exit time</th><th>Fee</th></tr></thead><tbody id="history-table"></tbody></table></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
