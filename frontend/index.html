@@ -7,6 +7,20 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <section id="auth-screen" class="auth-screen">
+    <div class="auth-intro"><div class="auth-logo">P</div><p class="eyebrow">PARKEASE</p><h1>Parking, organised.</h1><p>Manage your facility with a single clear view of slots, vehicles, and revenue.</p></div>
+    <section class="auth-card" aria-labelledby="auth-title">
+      <p class="eyebrow">SECURE ACCESS</p><h2 id="auth-title"></h2><p id="auth-lead" class="auth-lead"></p>
+      <form id="auth-form">
+        <label>Email address<input id="auth-email" type="email" required placeholder="you@example.com" autocomplete="email" /></label>
+        <label>Password<input id="auth-password" type="password" required minlength="8" placeholder="At least 8 characters" autocomplete="current-password" /></label>
+        <p id="auth-message" class="auth-message" role="alert"></p>
+        <button id="auth-submit" class="button" type="submit"></button>
+      </form>
+      <p id="auth-switch" class="auth-switch"></p>
+    </section>
+  </section>
+  <div id="app-shell" hidden>
   <aside class="sidebar">
     <div class="brand">
       <span class="brand-mark">P</span>
@@ -68,6 +82,8 @@
   </main>
 
   <div id="toast" role="status" aria-live="polite"></div>
-  <script src="app.js"></script>
+  </div>
+  <script src="app.js?v=2"></script>
+  <script src="auth.js?v=2"></script>
 </body>
 </html>
