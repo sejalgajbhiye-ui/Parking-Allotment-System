@@ -1,4 +1,4 @@
-const state = { vehicles: [], history: [], revenue: 0, next2W: 1, next4W: 1 };
+const state = { vehicles: [], history: [], revenue: 0 };
 const pageInfo = {
   dashboard: ["Dashboard", "A quick view of your parking facility."],
   park: ["Park a vehicle", "Register a vehicle and allocate the next available slot."],
@@ -19,7 +19,7 @@ function changePage(page) {
 }
 
 function row(vehicle, includeAction = false) {
-  const action = includeAction ? `<td><button class="button checkout" data-checkout="${escapeHtml(vehicle.number)}">Check out</button></td>` : '';
+  const action = includeAction ? `<td><button class="button checkout" data-checkout="${vehicle.id}">Check out</button></td>` : '';
   return `<tr><td>${escapeHtml(vehicle.number)}</td><td>${escapeHtml(vehicle.owner)}</td><td>${vehicle.type}</td><td>${vehicle.slot}</td><td>${formatTime(vehicle.entry)}</td><td>${minutesSince(vehicle.entry)} min</td>${action}</tr>`;
 }
 
@@ -50,21 +50,49 @@ document.querySelectorAll('.nav-link').forEach(button => button.addEventListener
 document.querySelectorAll('[data-navigate]').forEach(button => button.addEventListener('click', () => changePage(button.dataset.navigate)));
 document.querySelector('#vehicle-search').addEventListener('input', render);
 document.querySelector('#parking-form').addEventListener('submit', event => {
+  submitParking(event);
+});
+
+async function submitParking(event) {
   event.preventDefault();
   const number = document.querySelector('#vehicle-number').value.trim().toUpperCase();
   const owner = document.querySelector('#owner-name').value.trim();
   const type = document.querySelector('#vehicle-type').value;
-  if (state.vehicles.some(vehicle => vehicle.number === number)) return notify('This vehicle is already parked.');
-  const occupied = state.vehicles.filter(vehicle => vehicle.type === type).length;
-  if (occupied >= 100) return notify(`No ${type} slots are available.`);
-  const slot = type === '2W' ? state.next2W++ : state.next4W++;
-  state.vehicles.push({ number, owner, type, slot, entry: new Date() });
-  event.target.reset(); render(); notify(`${number} allocated ${type} slot ${slot}.`); changePage('vehicles');
+  try {
+    const response = await api('/api/parking', { method: 'POST', body: JSON.stringify({ number, owner, type }) });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message);
+    event.target.reset(); await loadParkingData(); notify(`${data.vehicle.vehicle_number} allocated ${data.vehicle.vehicle_type} slot ${data.vehicle.slot_no}.`); changePage('vehicles');
+  } catch (error) { notify(error.message || 'Unable to park this vehicle.'); }
+}
+
+document.addEventListener('click', async event => {
+  const id = event.target.dataset.checkout; if (!id) return;
+  try {
+    const response = await api(`/api/parking/${id}/checkout`, { method: 'POST' });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message);
+    await loadParkingData(); notify(`${data.vehicle.vehicle_number} checked out. Fee: Rs. ${Number(data.vehicle.fee).toFixed(2)}.`);
+  } catch (error) { notify(error.message || 'Unable to check out this vehicle.'); }
 });
-document.addEventListener('click', event => {
-  const number = event.target.dataset.checkout; if (!number) return;
-  const index = state.vehicles.findIndex(vehicle => vehicle.number === number); const vehicle = state.vehicles.splice(index, 1)[0];
-  const fee = Math.max(1, minutesSince(vehicle.entry)) * (vehicle.type === '2W' ? 1 : 2);
-  state.revenue += fee; state.history.unshift({ ...vehicle, exit: new Date(), fee }); render(); notify(`${number} checked out. Fee: Rs. ${fee.toFixed(2)}.`);
-});
+
+function api(url, options = {}) {
+  return fetch(url, { ...options, headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${sessionStorage.getItem('parkease_token') || ''}`, ...(options.headers || {}) } });
+}
+
+async function loadParkingData() {
+  const token = sessionStorage.getItem('parkease_token');
+  if (!token) return;
+  try {
+    const response = await api('/api/parking');
+    if (response.status === 401) { sessionStorage.removeItem('parkease_token'); return; }
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message);
+    state.vehicles = data.active.map(vehicle => ({ id: vehicle.id, number: vehicle.vehicle_number, owner: vehicle.owner_name, type: vehicle.vehicle_type, slot: vehicle.slot_no, entry: new Date(vehicle.entry_time) }));
+    state.history = data.history.map(vehicle => ({ id: vehicle.id, number: vehicle.vehicle_number, owner: vehicle.owner_name, type: vehicle.vehicle_type, slot: vehicle.slot_no, entry: new Date(vehicle.entry_time), exit: new Date(vehicle.exit_time), fee: Number(vehicle.fee) }));
+    state.revenue = Number(data.revenue); render();
+  } catch (error) { notify(error.message || 'Unable to load saved parking data.'); }
+}
+
+window.loadParkingData = loadParkingData;
 render();

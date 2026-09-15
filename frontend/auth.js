@@ -25,6 +25,7 @@ function setAuthMode(mode) {
 function showApp() {
   authScreen.hidden = true;
   appShell.hidden = false;
+  window.loadParkingData?.();
 }
 
 authSwitch.addEventListener('click', event => {
