@@ -38,7 +38,7 @@ authForm.addEventListener('submit', async event => {
   authSubmit.disabled = true;
   authSubmit.textContent = authMode === 'signup' ? 'Creating account...' : 'Signing in...';
   try {
-    const response = await fetch(`/api/auth/${authMode}`, {
+    const response = await fetch(apiUrl(`/api/auth/${authMode}`), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: authEmail.value.trim(), password: authPassword.value })
     });

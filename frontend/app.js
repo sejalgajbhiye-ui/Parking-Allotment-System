@@ -76,8 +76,12 @@ document.addEventListener('click', async event => {
   } catch (error) { notify(error.message || 'Unable to check out this vehicle.'); }
 });
 
+function apiUrl(path) {
+  return `${String(window.PARKEASE_API_URL || '').replace(/\/$/, '')}${path}`;
+}
+
 function api(url, options = {}) {
-  return fetch(url, { ...options, headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${sessionStorage.getItem('parkease_token') || ''}`, ...(options.headers || {}) } });
+  return fetch(apiUrl(url), { ...options, headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${sessionStorage.getItem('parkease_token') || ''}`, ...(options.headers || {}) } });
 }
 
 async function loadParkingData() {

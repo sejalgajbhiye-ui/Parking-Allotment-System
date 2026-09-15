@@ -82,6 +82,37 @@ The server creates the `users` table automatically when it first connects to Pos
 2. After successful sign-up, sign in with the same credentials.
 3. The main parking dashboard opens after login.
 
+## Deploy Frontend and Backend Separately
+
+### Backend: Render
+
+Create a Render **Web Service** from this GitHub repository with these settings:
+
+```text
+Build Command: npm install
+Start Command: npm start
+```
+
+Create a Render PostgreSQL database in the same region. In the web service environment settings, add `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` using the database's internal connection details, plus a strong `JWT_SECRET`.
+
+After the frontend is deployed, also add:
+
+```env
+FRONTEND_URL=https://your-project.vercel.app
+```
+
+### Frontend: Vercel
+
+Import the GitHub repository into Vercel and set the **Root Directory** to `frontend`. Framework preset: **Other**. No build command is needed.
+
+After Render gives you the backend URL, update `frontend/config.js`:
+
+```js
+window.PARKEASE_API_URL = 'https://your-render-service.onrender.com';
+```
+
+Push the update to GitHub and Vercel will redeploy the frontend. Finally, set `FRONTEND_URL` on Render to the exact Vercel URL so the API accepts browser requests from the deployed frontend.
+
 ## Run the Java Application (Optional)
 
 Compile the Java desktop version:
