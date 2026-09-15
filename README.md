@@ -1,116 +1,107 @@
-# 🚗 Parking Allotment System
+# ParkEase - Parking Allotment System
 
-A **Java console-based Parking Management System** that manages parking slots for vehicles using efficient **Data Structures** such as Queue and Hash Table.
+ParkEase is a parking management project with a responsive web dashboard, secure user authentication, and a PostgreSQL database. It also retains the original Java console and desktop implementations built with custom data structures.
 
-This project allows users to park vehicles, remove vehicles, check parking slots, and track parking revenue through a **menu-driven interface**.
+## Features
 
----
+- Create an account and sign in using email and password
+- Passwords stored securely with bcrypt hashing
+- PostgreSQL-backed user accounts
+- Dashboard showing active vehicles, available slots, and total revenue
+- Allocate slots for two-wheelers and four-wheelers
+- Search active vehicles and check them out
+- Parking history and fee calculation
+- Responsive HTML, CSS, and JavaScript interface
 
-## 📌 Features
+## Tech Stack
 
-✨ Park a Vehicle  
-✨ Remove a Vehicle  
-✨ Search Vehicle by Number  
-✨ Show All Parked Vehicles  
-✨ Show Available Parking Slots  
-✨ Calculate Parking Duration  
-✨ Track Total Revenue  
-✨ Monthly Revenue Report  
-✨ View Parking History  
-✨ Find Longest Parked Vehicle  
-✨ Display Vehicle Count  
-✨ Show Slot Usage  
-✨ Reset Parking System  
-✨ Show Vehicles by Type  
+- Frontend: HTML, CSS, JavaScript
+- Backend: Node.js, Express.js
+- Database: PostgreSQL
+- Authentication: bcryptjs and JSON Web Tokens (JWT)
+- Legacy application: Java, Swing, Queue, Hash Table, ArrayList
 
----
+## Project Structure
 
-## 🧠 Data Structures Used
-
-🔹 **Queue** – Used for managing available parking slots  
-🔹 **Hash Table (Double Hashing)** – Used for fast vehicle lookup  
-🔹 **ArrayList** – Used for storing vehicle parking history  
-
----
-
-## ⚙️ Technologies Used
-
-💻 **Java**  
-📦 **Object-Oriented Programming (OOP)**  
-🧮 **Data Structures & Algorithms**
-
----
-
-## 📂 Project Structure
-
-
-Parking-Allotment-System
-│
-├── ParkingSystem.java
+```text
+ParkingAllotmentSystem/
+├── frontend/
+│   ├── index.html          # Login, sign-up, and dashboard UI
+│   ├── styles.css          # Responsive styling
+│   ├── app.js              # Parking dashboard interactions
+│   └── auth.js             # Login and sign-up interactions
+├── server.js               # Express server and authentication routes
+├── db.js                   # PostgreSQL connection and users table setup
+├── package.json            # Node.js dependencies and scripts
+├── .env.example            # Database configuration template
+├── ParkingSystem.java      # Original Java console application
+├── ParkingSystemUI.java    # Java Swing desktop interface
 └── README.md
+```
 
+## Run the Web Application
 
----
+### Prerequisites
 
-## ▶️ How to Run the Project
+- Node.js 18 or later
+- PostgreSQL running locally
 
-1️⃣ Compile the program
+### Setup
 
+1. Install dependencies:
 
-javac ParkingSystem.java
+   ```powershell
+   npm install
+   ```
 
+2. Copy `.env.example` to `.env` and update it with your PostgreSQL settings:
 
-2️⃣ Run the program
+   ```env
+   PORT=3000
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_NAME=postgres
+   DB_USER=postgres
+   DB_PASSWORD=your_postgres_password
+   JWT_SECRET=replace_with_a_long_random_secret
+   ```
 
+3. Start the application:
 
+   ```powershell
+   npm start
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in a browser.
+
+The server creates the `users` table automatically when it first connects to PostgreSQL. Do not open `frontend/index.html` directly or use Live Server, because authentication requires the Node.js backend.
+
+## User Flow
+
+1. Create an account with an email and a password of at least eight characters.
+2. After successful sign-up, sign in with the same credentials.
+3. The main parking dashboard opens after login.
+
+## Run the Java Application (Optional)
+
+Compile the Java desktop version:
+
+```powershell
+javac ParkingSystem.java ParkingSystemUI.java
 java ParkingSystem
+```
 
+To run the original menu-driven console version:
 
----
+```powershell
+java ParkingSystem --console
+```
 
-## 📸 Sample Menu Output
+## Security Notes
 
+- Passwords are hashed before storage; plain-text passwords are never saved.
+- The `.env` file is excluded from Git. Keep database credentials and `JWT_SECRET` private.
 
-Park Vehicle
+## Author
 
-Remove Vehicle
-
-Search Vehicle
-
-Show All Vehicles
-
-Show Available Slots
-
-Total Revenue
-
-Monthly Revenue
-
-Vehicle History
-
-Longest Parked Vehicle
-
-Total Count
-
-Slot Usage
-
-Reset System
-
-Show Parking Duration
-
-Vehicles by Type
-
-Exit
-
-
----
-
-## 👩‍💻 Author
-
-**Sejal Gajbhiye**
-
-🎓 BTech Computer Engineering  
-📍 Pune, India  
-
----
-
-⭐ If you like this project, feel free to **star the repository**!
+Sejal Gajbhiye
